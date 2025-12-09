@@ -617,19 +617,11 @@ function enviarFormulario() {
         method: 'POST',
         body: JSON.stringify(payload),
         signal: controller.signal,
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-        }
-    })
-    .then(response => {
-        clearTimeout(timeoutId);
-        if (!response.ok && response.status !== 0) {
-            // Google Apps Script puede devolver status 0 en modo no-cors
-            throw new Error('Error en la respuesta del servidor');
-        }
-        return response;
+        mode: 'no-cors' // Google Apps Script requiere no-cors
     })
     .then(() => {
+        // En modo no-cors, no podemos leer la respuesta pero si llegamos aquí, se envió
+        clearTimeout(timeoutId);
         RateLimiter.recordSubmission();
         SubmissionGuard.endSubmission(true);
         loadingOverlay.classList.remove('active');
