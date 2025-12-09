@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Diagnóstico de Necesidades de Capacitación 2026 - American Axle & Manufacturing">
+    <title>DNC 2026 - AAM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --aam-red: #C8102E;
+            --aam-red-dark: #A00D24;
+            --aam-red-light: #E8394F;
+            --aam-dark: #1A1A2E;
+            --aam-dark-secondary: #16213E;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --white: #FFFFFF;
+            --success: #059669;
+            --success-light: #D1FAE5;
+            --warning: #D97706;
+            --warning-light: #FEF3C7;
+            --error: #DC2626;
+            --error-light: #FEE2E2;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --radius-sm: 6px;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            min-height: 100vh;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--aam-dark) 0%, var(--aam-dark-secondary) 100%);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 56px;
+            height: 56px;
+            background: var(--aam-red);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--white);
+            letter-spacing: -1px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .brand-text {
+            color: var(--white);
+        }
+
+        .brand-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text p {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
+        .header-badge {
+            background: var(--aam-red);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 24px 48px;
+        }
+
+        /* Progress Indicator */
+        .progress-bar {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-400);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .progress-step.active {
+            color: var(--aam-red);
+        }
+
+        .progress-step.completed {
+            color: var(--success);
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .progress-step.active .step-number {
+            background: var(--aam-red);
+            color: var(--white);
+        }
+
+        .progress-step.completed .step-number {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .progress-line {
+            flex: 1;
+            height: 2px;
+            background: var(--gray-200);
+            min-width: 40px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .form-section {
+            padding: 32px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--aam-red-light) 0%, var(--aam-red) 100%);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+        }
+
+        .section-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .section-subtitle {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Controls */
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .form-label .required {
+            color: var(--aam-red);
+            margin-left: 2px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--gray-800);
+            background: var(--white);
+            transition: var(--transition);
+        }
+
+        .form-input:hover,
+        .form-select:hover,
+        .form-textarea:hover {
+            border-color: var(--gray-300);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--aam-red);
+            box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+        }
+
+        .form-input.error,
+        .form-select.error {
+            border-color: var(--error);
+            background: var(--error-light);
+        }
+
+        .form-input.valid,
+        .form-select.valid {
+            border-color: var(--success);
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 44px;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .input-hint {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-top: 6px;
+        }
+
+        .input-error {
+            font-size: 0.8rem;
+            color: var(--error);
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-group.has-error .input-error {
+            display: block;
+        }
+
+        /* Course Selection */
+        .selection-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .selection-counter {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .counter-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .counter-number {
+            width: 28px;
+            height: 28px;
+            background: var(--aam-red);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .counter-number.warning {
+            background: var(--warning);
+        }
+
+        .counter-number.full {
+            background: var(--success);
+        }
+
+        .selection-hint {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        /* Category */
+        .category-wrapper {
+            margin-bottom: 16px;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, var(--aam-dark) 0%, var(--aam-dark-secondary) 100%);
+            color: var(--white);
+            padding: 14px 20px;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-header svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.8;
+        }
+
+        .category-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 8px;
+            padding: 16px;
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-top: none;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+
+        .course-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            background: var(--white);
+            border: 2px solid transparent;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .course-item:hover {
+            border-color: var(--gray-300);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .course-item.selected {
+            border-color: var(--aam-red);
+            background: linear-gradient(135deg, rgba(200, 16, 46, 0.05) 0%, rgba(200, 16, 46, 0.02) 100%);
+        }
+
+        .course-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .course-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-300);
+            border-radius: 4px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .course-item.selected .course-checkbox {
+            background: var(--aam-red);
+            border-color: var(--aam-red);
+        }
+
+        .course-checkbox svg {
+            width: 14px;
+            height: 14px;
+            color: var(--white);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: var(--transition);
+        }
+
+        .course-item.selected .course-checkbox svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .course-name {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+
+        .course-item.selected .course-name {
+            color: var(--aam-red-dark);
+            font-weight: 600;
+        }
+
+        /* Justification Section */
+        #justificacion-container {
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .justification-alert {
+            background: linear-gradient(135deg, var(--warning-light) 0%, #FEF9E7 100%);
+            border: 1px solid #F59E0B;
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: var(--warning);
+        }
+
+        .justification-alert svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .justification-cards {
+            display: grid;
+            gap: 16px;
+        }
+
+        .justification-card {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .justification-card:hover {
+            border-color: var(--gray-300);
+        }
+
+        .justification-card.complete {
+            border-color: var(--success);
+            background: linear-gradient(135deg, var(--success-light) 0%, #ECFDF5 100%);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-badge {
+            background: var(--aam-red);
+            color: var(--white);
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .card-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .justification-card.complete .card-status {
+            background: var(--success);
+        }
+
+        .card-status svg {
+            width: 14px;
+            height: 14px;
+            color: var(--white);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .justification-card.complete .card-status svg {
+            opacity: 1;
+        }
+
+        /* Submit Section */
+        .submit-section {
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+            padding: 32px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--aam-red) 0%, var(--aam-red-dark) 100%);
+            color: var(--white);
+            border: none;
+            padding: 16px 48px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 14px rgba(200, 16, 46, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200, 16, 46, 0.5);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: var(--gray-400);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .submit-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .submit-hint {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            max-width: 420px;
+            animation: toastIn 0.3s ease;
+            border-left: 4px solid var(--gray-400);
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--error);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--error);
+        }
+
+        .toast.warning .toast-icon {
+            color: var(--warning);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 2px;
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .toast-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--gray-200);
+            border-top-color: var(--aam-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        /* Success Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+            padding: 24px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--success-light) 0%, #D1FAE5 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .modal-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--success);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 12px;
+        }
+
+        .modal-message {
+            color: var(--gray-600);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .modal-btn {
+            background: var(--aam-red);
+            color: var(--white);
+            border: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-btn:hover {
+            background: var(--aam-red-dark);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 32px 24px;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        .footer a {
+            color: var(--aam-red);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 16px 20px;
+            }
+
+            .logo {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+
+            .brand-text h1 {
+                font-size: 1.25rem;
+            }
+
+            .header-badge {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+
+            .main-container {
+                padding: 20px 16px 32px;
+            }
+
+            .progress-bar {
+                padding: 16px;
+            }
+
+            .progress-step span {
+                display: none;
+            }
+
+            .form-section {
+                padding: 24px 20px;
+            }
+
+            .section-header {
+                flex-wrap: wrap;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 16px 24px;
+            }
+
+            .toast {
+                min-width: auto;
+                max-width: calc(100vw - 48px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .selection-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .counter-badge {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo-section">
+            <div class="logo">AAM</div>
+            <div class="brand-text">
+                <h1>American Axle & Manufacturing</h1>
+                <p>Recursos Humanos - Capacitación</p>
+            </div>
+        </div>
+        <div class="header-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            DNC 2026
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="main-container">
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-step active" id="step1">
+            <span class="step-number">1</span>
+            <span>Datos Personales</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="step2">
+            <span class="step-number">2</span>
+            <span>Selección de Cursos</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" id="step3">
+            <span class="step-number">3</span>
+            <span>Justificación</span>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+        <!-- Section 1: Personal Data -->
+        <section class="form-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="section-title">Datos del Colaborador</h2>
+                    <p class="section-subtitle">Información básica para tu solicitud</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">
+                        Nombre Completo <span class="required">*</span>
+                    </label>
+                    <input type="text" id="nombre" class="form-input" placeholder="Ej: Juan Pérez García" autocomplete="name">
+                    <span class="input-error">Por favor ingresa tu nombre completo</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        Área / Planta <span class="required">*</span>
+                    </label>
+                    <select id="area" class="form-select">
+                        <option value="">Selecciona tu área...</option>
+                        <option value="Planta 1 - Producción">Planta 1 - Producción</option>
+                        <option value="Planta 2 - Ensamble">Planta 2 - Ensamble</option>
+                        <option value="Planta 3 - Maquinados">Planta 3 - Maquinados</option>
+                        <option value="Ingeniería">Ingeniería</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                        <option value="Calidad">Calidad</option>
+                        <option value="Logística">Logística</option>
+                        <option value="Recursos Humanos">Recursos Humanos</option>
+                        <option value="Finanzas">Finanzas</option>
+                        <option value="IT / Sistemas">IT / Sistemas</option>
+                        <option value="Compras">Compras</option>
+                        <option value="EHS">EHS (Seguridad e Higiene)</option>
+                    </select>
+                    <span class="input-error">Selecciona tu área de trabajo</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Course Selection -->
+        <section class="form-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="section-title">Catálogo de Cursos</h2>
+                    <p class="section-subtitle">Selecciona los cursos prioritarios para tu desarrollo</p>
+                </div>
+            </div>
+
+            <div class="selection-info">
+                <div class="selection-counter">
+                    <div class="counter-badge">
+                        <span class="counter-number" id="counter">0</span>
+                        <span>de 3 cursos seleccionados</span>
+                    </div>
+                </div>
+                <p class="selection-hint">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Máximo 3 cursos prioritarios por colaborador
+                </p>
+            </div>
+
+            <div id="catalogo-render"></div>
+        </section>
+
+        <!-- Section 3: Justification -->
+        <section class="form-section" id="justificacion-container">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="section-title">Justificación de Cursos</h2>
+                    <p class="section-subtitle">Indica el motivo de tu solicitud para cada curso</p>
+                </div>
+            </div>
+
+            <div class="justification-alert">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Selecciona el motivo para <strong>cada curso</strong> antes de enviar</span>
+            </div>
+
+            <div id="cards-wrapper" class="justification-cards"></div>
+        </section>
+
+        <!-- Section 4: Comments -->
+        <section class="form-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="section-title">Comentarios Adicionales</h2>
+                    <p class="section-subtitle">Información extra que desees compartir (opcional)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <textarea id="comentarios" class="form-textarea" placeholder="Escribe aquí cualquier observación, sugerencia o información adicional que consideres relevante..."></textarea>
+                <p class="input-hint">Este campo es opcional</p>
+            </div>
+        </section>
+
+        <!-- Submit Section -->
+        <div class="submit-section">
+            <button type="button" id="btn-enviar" class="submit-btn" onclick="enviarFormulario()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+                Enviar Diagnóstico
+            </button>
+            <p class="submit-hint">Al enviar, tu información será registrada para el plan de capacitación 2026</p>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>© 2025 American Axle & Manufacturing. Todos los derechos reservados.</p>
+    <p>Desarrollado por <a href="#">Recursos Humanos - Capacitación</a></p>
+</footer>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <p class="loading-text">Enviando tu diagnóstico...</p>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <div class="modal-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <h3 class="modal-title">¡Enviado Correctamente!</h3>
+        <p class="modal-message">Tu Diagnóstico de Necesidades de Capacitación ha sido registrado exitosamente. El equipo de Recursos Humanos revisará tu solicitud.</p>
+        <button class="modal-btn" onclick="cerrarModalYRecargar()">Entendido</button>
+    </div>
+</div>
+
+<script>
+    // ===== CATÁLOGO DE CURSOS =====
+    const catalogoCursos = {
+        "Calidad": [
+            "Metrología Dimensional",
+            "Calypso Básico",
+            "Calypso Avanzado",
+            "GD&T (Tolerancias Geométricas)",
+            "MSA (Análisis de Sistemas de Medición)",
+            "BIQ (Built-In Quality)",
+            "APQP/PPAP",
+            "Control Estadístico de Proceso (SPC)",
+            "Auditor Interno ISO 9001",
+            "Core Tools"
+        ],
+        "Software & Tecnología": [
+            "Excel Avanzado",
+            "Power BI",
+            "Python para Análisis de Datos",
+            "AutoCAD 2D/3D",
+            "SQL Server",
+            "SAP Básico",
+            "SAP Avanzado",
+            "Power Automate",
+            "SharePoint",
+            "Microsoft Project"
+        ],
+        "Robots & Automatización": [
+            "Programación ABB",
+            "Fanuc Operación",
+            "Fanuc Programación",
+            "Seguridad en Celdas Robotizadas",
+            "PLC Allen Bradley",
+            "PLC Siemens",
+            "Visión Artificial",
+            "Servomotores y Variadores"
+        ],
+        "Manufactura & Procesos": [
+            "Lean Manufacturing",
+            "Six Sigma Green Belt",
+            "Six Sigma Black Belt",
+            "Kaizen",
+            "5S's",
+            "SMED",
+            "TPM",
+            "Value Stream Mapping",
+            "8D's Problem Solving"
+        ],
+        "Liderazgo & Desarrollo": [
+            "Liderazgo Efectivo",
+            "Comunicación Asertiva",
+            "Trabajo en Equipo",
+            "Gestión del Tiempo",
+            "Toma de Decisiones",
+            "Coaching para Líderes",
+            "Manejo de Conflictos",
+            "Inteligencia Emocional"
+        ],
+        "Seguridad & EHS": [
+            "Seguridad Industrial",
+            "Manejo de Materiales Peligrosos",
+            "Ergonomía en el Trabajo",
+            "Primeros Auxilios",
+            "Prevención de Incendios",
+            "Bloqueo/Etiquetado (LOTO)",
+            "Trabajo en Alturas",
+            "ISO 14001 / ISO 45001"
+        ],
+        "Mantenimiento": [
+            "Mantenimiento Preventivo",
+            "Mantenimiento Predictivo",
+            "Análisis de Vibraciones",
+            "Termografía Industrial",
+            "Lubricación Industrial",
+            "Electricidad Industrial",
+            "Neumática e Hidráulica",
+            "Soldadura Industrial"
+        ]
+    };
+
+    // ===== ELEMENTOS DEL DOM =====
+    const catalogoDiv = document.getElementById('catalogo-render');
+    const justifContainer = document.getElementById('justificacion-container');
+    const cardsWrapper = document.getElementById('cards-wrapper');
+    const counterEl = document.getElementById('counter');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const toastContainer = document.getElementById('toast-container');
+    const MAX_SELECTION = 3;
+
+    // ===== RENDERIZAR CATÁLOGO =====
+    const categoryIcons = {
+        "Calidad": '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
+        "Software & Tecnología": '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>',
+        "Robots & Automatización": '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>',
+        "Manufactura & Procesos": '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>',
+        "Liderazgo & Desarrollo": '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>',
+        "Seguridad & EHS": '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>',
+        "Mantenimiento": '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>'
+    };
+
+    for (const [categoria, cursos] of Object.entries(catalogoCursos)) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'category-wrapper';
+
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        header.innerHTML = `
+            ${categoryIcons[categoria] || ''}
+            ${categoria}
+            <span class="category-count">${cursos.length} cursos</span>
+        `;
+        wrapper.appendChild(header);
+
+        const grid = document.createElement('div');
+        grid.className = 'courses-grid';
+
+        cursos.forEach(curso => {
+            const item = document.createElement('div');
+            item.className = 'course-item';
+            item.setAttribute('data-curso', curso);
+            item.innerHTML = `
+                <div class="course-checkbox">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <span class="course-name">${curso}</span>
+            `;
+            item.addEventListener('click', () => manejarSeleccion(item));
+            grid.appendChild(item);
+        });
+
+        wrapper.appendChild(grid);
+        catalogoDiv.appendChild(wrapper);
+    }
+
+    // ===== LÓGICA DE SELECCIÓN =====
+    function manejarSeleccion(item) {
+        const isSelected = item.classList.contains('selected');
+        const totalSeleccionados = document.querySelectorAll('.course-item.selected').length;
+
+        if (!isSelected && totalSeleccionados >= MAX_SELECTION) {
+            showToast('warning', 'Límite alcanzado', `Solo puedes seleccionar ${MAX_SELECTION} cursos prioritarios.`);
+            return;
+        }
+
+        item.classList.toggle('selected');
+        actualizarEstado();
+    }
+
+    function actualizarEstado() {
+        const seleccionados = document.querySelectorAll('.course-item.selected');
+        const count = seleccionados.length;
+
+        // Actualizar contador
+        counterEl.textContent = count;
+        counterEl.classList.remove('warning', 'full');
+        if (count === 2) counterEl.classList.add('warning');
+        if (count === 3) counterEl.classList.add('full');
+
+        // Actualizar progress steps
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+
+        const nombre = document.getElementById('nombre').value.trim();
+        const area = document.getElementById('area').value;
+
+        step1.classList.toggle('completed', nombre && area);
+        step1.classList.toggle('active', !nombre || !area);
+
+        step2.classList.toggle('completed', count > 0);
+        step2.classList.toggle('active', nombre && area && count === 0);
+
+        step3.classList.toggle('active', count > 0);
+
+        // Deshabilitar items no seleccionados si llegamos al máximo
+        document.querySelectorAll('.course-item').forEach(item => {
+            if (count >= MAX_SELECTION && !item.classList.contains('selected')) {
+                item.classList.add('disabled');
+            } else {
+                item.classList.remove('disabled');
+            }
+        });
+
+        // Mostrar/ocultar sección de justificaciones
+        if (count > 0) {
+            justifContainer.style.display = 'block';
+            renderizarJustificaciones(seleccionados);
+        } else {
+            justifContainer.style.display = 'none';
+        }
+    }
+
+    function renderizarJustificaciones(nodelist) {
+        const cursos = Array.from(nodelist).map(item => item.getAttribute('data-curso'));
+
+        // Guardar valores previos
+        const valoresPrevios = {};
+        document.querySelectorAll('.motivo-select').forEach(sel => {
+            valoresPrevios[sel.dataset.curso] = sel.value;
+        });
+
+        cardsWrapper.innerHTML = '';
+
+        cursos.forEach((curso, index) => {
+            const valorAnterior = valoresPrevios[curso] || "";
+            const card = document.createElement('div');
+            card.className = 'justification-card' + (valorAnterior ? ' complete' : '');
+            card.innerHTML = `
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <span class="card-badge">${index + 1}</span>
+                        ${curso}
+                    </h4>
+                    <div class="card-status">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">¿Por qué requieres este curso? <span class="required">*</span></label>
+                    <select class="form-select motivo-select" data-curso="${curso}" onchange="verificarJustificacion(this)">
+                        <option value="" disabled ${!valorAnterior ? "selected" : ""}>Selecciona el motivo...</option>
+                        <option value="Requerimiento Normativo" ${valorAnterior === "Requerimiento Normativo" ? "selected" : ""}>Requerimiento Normativo (Legal/ISO)</option>
+                        <option value="GAP - Evaluación Desempeño" ${valorAnterior === "GAP - Evaluación Desempeño" ? "selected" : ""}>Cerrar GAP / Evaluación de Desempeño</option>
+                        <option value="Nueva Tecnología" ${valorAnterior === "Nueva Tecnología" ? "selected" : ""}>Nueva Tecnología / Proyecto</option>
+                        <option value="Desarrollo" ${valorAnterior === "Desarrollo" ? "selected" : ""}>Plan de Desarrollo Personal</option>
+                        <option value="Seguridad" ${valorAnterior === "Seguridad" ? "selected" : ""}>Seguridad (EHS)</option>
+                        <option value="Promoción" ${valorAnterior === "Promoción" ? "selected" : ""}>Preparación para Promoción</option>
+                        <option value="Otro" ${valorAnterior === "Otro" ? "selected" : ""}>Otro motivo</option>
+                    </select>
+                </div>
+            `;
+            cardsWrapper.appendChild(card);
+        });
+    }
+
+    function verificarJustificacion(select) {
+        const card = select.closest('.justification-card');
+        if (select.value) {
+            card.classList.add('complete');
+        } else {
+            card.classList.remove('complete');
+        }
+    }
+
+    // ===== VALIDACIÓN DE CAMPOS =====
+    document.getElementById('nombre').addEventListener('blur', function() {
+        validateField(this, this.value.trim().length >= 3);
+    });
+
+    document.getElementById('area').addEventListener('change', function() {
+        validateField(this, this.value !== '');
+    });
+
+    document.getElementById('nombre').addEventListener('input', actualizarEstado);
+    document.getElementById('area').addEventListener('change', actualizarEstado);
+
+    function validateField(field, isValid) {
+        const group = field.closest('.form-group');
+        if (isValid) {
+            field.classList.remove('error');
+            field.classList.add('valid');
+            group.classList.remove('has-error');
+        } else {
+            field.classList.add('error');
+            field.classList.remove('valid');
+            group.classList.add('has-error');
+        }
+        return isValid;
+    }
+
+    // ===== TOAST NOTIFICATIONS =====
+    function showToast(type, title, message) {
+        const icons = {
+            success: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
+            error: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
+            warning: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>'
+        };
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+            <div class="toast-icon">${icons[type]}</div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" onclick="closeToast(this)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:18px;height:18px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'toastOut 0.3s ease forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
+    function closeToast(btn) {
+        const toast = btn.closest('.toast');
+        toast.style.animation = 'toastOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }
+
+    // ===== ENVÍO DEL FORMULARIO =====
+    function enviarFormulario() {
+        const btn = document.getElementById('btn-enviar');
+        const nombre = document.getElementById('nombre').value.trim();
+        const area = document.getElementById('area').value;
+        const seleccionados = document.querySelectorAll('.course-item.selected');
+        const selects = document.querySelectorAll('.motivo-select');
+
+        // Validaciones
+        let hasErrors = false;
+
+        if (!nombre || nombre.length < 3) {
+            validateField(document.getElementById('nombre'), false);
+            showToast('error', 'Campo requerido', 'Por favor ingresa tu nombre completo.');
+            hasErrors = true;
+        }
+
+        if (!area) {
+            validateField(document.getElementById('area'), false);
+            if (!hasErrors) showToast('error', 'Campo requerido', 'Por favor selecciona tu área de trabajo.');
+            hasErrors = true;
+        }
+
+        if (seleccionados.length === 0) {
+            if (!hasErrors) showToast('error', 'Selección requerida', 'Debes seleccionar al menos un curso.');
+            hasErrors = true;
+        }
+
+        let faltaMotivo = false;
+        selects.forEach(sel => {
+            if (!sel.value) faltaMotivo = true;
+        });
+
+        if (faltaMotivo) {
+            if (!hasErrors) showToast('error', 'Justificación incompleta', 'Indica el motivo para TODOS los cursos seleccionados.');
+            hasErrors = true;
+        }
+
+        if (hasErrors) return;
+
+        // Recolectar datos
+        let selecciones = [];
+        selects.forEach(sel => {
+            selecciones.push({
+                curso: sel.dataset.curso,
+                motivo: sel.value
+            });
+        });
+
+        const payload = {
+            nombre: nombre,
+            area: area,
+            selecciones: selecciones,
+            comentarios: document.getElementById('comentarios').value.trim(),
+            timestamp: new Date().toISOString()
+        };
+
+        // Mostrar loading
+        btn.disabled = true;
+        loadingOverlay.classList.add('active');
+
+        // URL del Apps Script
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzU7s6iH1vpkdqITbNpILMsVZTp0EInA7ff3_CuNTtd0nnsa1afhS3ge-tTy3C86Sh76g/exec';
+
+        fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            loadingOverlay.classList.remove('active');
+            modalOverlay.classList.add('active');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            loadingOverlay.classList.remove('active');
+            showToast('error', 'Error de conexión', 'No se pudo enviar. Verifica tu conexión e intenta de nuevo.');
+            btn.disabled = false;
+        });
+    }
+
+    function cerrarModalYRecargar() {
+        modalOverlay.classList.remove('active');
+        setTimeout(() => location.reload(), 300);
+    }
+
+    // ===== INICIALIZACIÓN =====
+    actualizarEstado();
+</script>
+
+</body>
+</html>
