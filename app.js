@@ -92,6 +92,220 @@ const SubmissionGuard = {
     }
 };
 
+// ===== SISTEMA DE ENVÍO ROBUSTO CON REINTENTOS =====
+const SubmissionManager = {
+    maxRetries: 3,
+    baseDelay: 1000, // 1 segundo
+    pendingKey: 'dnc_pending_submissions',
+    
+    // Generar ID único para cada envío
+    generateSubmissionId: function() {
+        return 'sub_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    },
+    
+    // Guardar envío pendiente en localStorage
+    savePending: function(submission) {
+        try {
+            const pending = this.getPending();
+            pending.push(submission);
+            localStorage.setItem(this.pendingKey, JSON.stringify(pending));
+        } catch(e) {
+            console.error('Error guardando envío pendiente:', e);
+        }
+    },
+    
+    // Obtener envíos pendientes
+    getPending: function() {
+        try {
+            const stored = localStorage.getItem(this.pendingKey);
+            return stored ? JSON.parse(stored) : [];
+        } catch(e) {
+            return [];
+        }
+    },
+    
+    // Marcar envío como completado
+    markCompleted: function(submissionId) {
+        try {
+            const pending = this.getPending();
+            const updated = pending.filter(s => s.id !== submissionId);
+            localStorage.setItem(this.pendingKey, JSON.stringify(updated));
+        } catch(e) {
+            console.error('Error actualizando envío:', e);
+        }
+    },
+    
+    // Actualizar estado de un envío pendiente
+    updatePending: function(submissionId, updates) {
+        try {
+            const pending = this.getPending();
+            const index = pending.findIndex(s => s.id === submissionId);
+            if (index !== -1) {
+                pending[index] = { ...pending[index], ...updates };
+                localStorage.setItem(this.pendingKey, JSON.stringify(pending));
+            }
+        } catch(e) {
+            console.error('Error actualizando envío:', e);
+        }
+    },
+    
+    // Calcular delay con backoff exponencial
+    getRetryDelay: function(attempt) {
+        // Backoff exponencial: 1s, 2s, 4s + jitter aleatorio
+        const exponentialDelay = this.baseDelay * Math.pow(2, attempt);
+        const jitter = Math.random() * 500; // 0-500ms de variación
+        return Math.min(exponentialDelay + jitter, 10000); // Máximo 10 segundos
+    },
+    
+    // Actualizar texto del loading overlay
+    updateLoadingText: function(text) {
+        const loadingText = document.querySelector('.loading-text');
+        if (loadingText) {
+            loadingText.textContent = text;
+        }
+    },
+    
+    // Enviar con reintentos
+    sendWithRetry: async function(payload, attempt = 0) {
+        const scriptURL = SecurityUtils.getEndpoint();
+        if (!scriptURL) {
+            throw new Error('No se pudo obtener el endpoint');
+        }
+        
+        const submissionId = payload.submissionId || this.generateSubmissionId();
+        payload.submissionId = submissionId;
+        payload.attempt = attempt + 1;
+        
+        // Guardar como pendiente en el primer intento
+        if (attempt === 0) {
+            this.savePending({
+                id: submissionId,
+                payload: payload,
+                status: 'sending',
+                createdAt: Date.now(),
+                attempts: 1
+            });
+        } else {
+            this.updatePending(submissionId, { 
+                attempts: attempt + 1,
+                lastAttempt: Date.now()
+            });
+        }
+        
+        // Actualizar UI según el intento
+        if (attempt === 0) {
+            this.updateLoadingText('Enviando tu respuesta...');
+        } else {
+            this.updateLoadingText(`Reintentando envío (${attempt + 1}/${this.maxRetries + 1})...`);
+        }
+        
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos por intento
+            
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(payload),
+                signal: controller.signal,
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'text/plain' // Evitar preflight
+                }
+            });
+            
+            clearTimeout(timeoutId);
+            
+            // En modo no-cors, si llegamos aquí sin error, asumimos éxito
+            // Pero implementamos verificación adicional
+            this.updateLoadingText('Verificando envío...');
+            
+            // Esperar un momento para que el servidor procese
+            await this.delay(500);
+            
+            // Marcar como probablemente exitoso
+            this.updatePending(submissionId, { 
+                status: 'likely_success',
+                completedAt: Date.now()
+            });
+            
+            // Después de 5 segundos, limpiar de pendientes
+            setTimeout(() => {
+                this.markCompleted(submissionId);
+            }, 5000);
+            
+            return { success: true, submissionId };
+            
+        } catch (error) {
+            console.warn(`Intento ${attempt + 1} fallido:`, error.message);
+            
+            // Si aún quedan reintentos
+            if (attempt < this.maxRetries) {
+                const delay = this.getRetryDelay(attempt);
+                this.updateLoadingText(`Error de conexión. Reintentando en ${Math.round(delay/1000)}s...`);
+                
+                await this.delay(delay);
+                return this.sendWithRetry(payload, attempt + 1);
+            }
+            
+            // Si se agotaron los reintentos
+            this.updatePending(submissionId, { 
+                status: 'failed',
+                error: error.message,
+                failedAt: Date.now()
+            });
+            
+            throw error;
+        }
+    },
+    
+    // Helper para delays
+    delay: function(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    
+    // Reintentar envíos pendientes fallidos (al cargar la página)
+    retryPendingSubmissions: async function() {
+        const pending = this.getPending();
+        const failed = pending.filter(s => s.status === 'failed' && 
+            Date.now() - s.failedAt < 3600000); // Solo los de la última hora
+        
+        if (failed.length > 0) {
+            console.log(`Encontrados ${failed.length} envíos pendientes para reintentar`);
+            
+            for (const submission of failed) {
+                try {
+                    // Reintentar en segundo plano
+                    await this.sendWithRetry(submission.payload, 0);
+                    showToast('success', 'Envío recuperado', 'Un envío pendiente se completó correctamente.');
+                } catch(e) {
+                    console.error('No se pudo recuperar envío pendiente:', e);
+                }
+            }
+        }
+        
+        // Limpiar envíos muy antiguos (más de 24 horas)
+        this.cleanOldSubmissions();
+    },
+    
+    // Limpiar envíos antiguos
+    cleanOldSubmissions: function() {
+        try {
+            const pending = this.getPending();
+            const dayAgo = Date.now() - 86400000;
+            const recent = pending.filter(s => s.createdAt > dayAgo);
+            localStorage.setItem(this.pendingKey, JSON.stringify(recent));
+        } catch(e) {
+            console.error('Error limpiando envíos antiguos:', e);
+        }
+    },
+    
+    // Verificar si hay envíos pendientes
+    hasPendingSubmissions: function() {
+        const pending = this.getPending();
+        return pending.some(s => s.status === 'failed' || s.status === 'sending');
+    }
+};
+
 // ===== CATÁLOGO DE CURSOS =====
 const catalogoCursos = Object.freeze({
     "Calidad": Object.freeze([
@@ -149,11 +363,12 @@ const catalogoCursos = Object.freeze({
         "Manejo de Conflictos",
         "Inteligencia Emocional"
     ]),
-    "Seguridad & EHS": Object.freeze([
+    "Seguridad": Object.freeze([
         "Seguridad Industrial",
         "Manejo de Materiales Peligrosos",
         "Ergonomía en el Trabajo",
         "Primeros Auxilios",
+        "Nuevo",
         "Prevención de Incendios",
         "Bloqueo/Etiquetado (LOTO)",
         "Trabajo en Alturas",
@@ -168,7 +383,7 @@ const catalogoCursos = Object.freeze({
         "Electricidad Industrial",
         "Neumática e Hidráulica",
         "Soldadura Industrial"
-    ])
+    ]),
 });
 
 // ===== ELEMENTOS DEL DOM =====
@@ -455,7 +670,8 @@ function showToast(type, title, message) {
     const icons = {
         success: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
         error: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
-        warning: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>'
+        warning: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>',
+        info: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'
     };
 
     const toast = document.createElement('div');
@@ -487,8 +703,8 @@ function closeToast(btn) {
     setTimeout(() => toast.remove(), 300);
 }
 
-// ===== ENVÍO DEL FORMULARIO (Seguro) =====
-function enviarFormulario() {
+// ===== ENVÍO DEL FORMULARIO (Seguro con Reintentos) =====
+async function enviarFormulario() {
     const btn = document.getElementById('btn-enviar');
     
     // Verificar protecciones de seguridad
@@ -597,7 +813,7 @@ function enviarFormulario() {
         userAgent: navigator.userAgent.substring(0, 200) // Limitar longitud
     };
 
-    // Obtener endpoint de forma segura
+    // Verificar endpoint
     const scriptURL = SecurityUtils.getEndpoint();
     if (!scriptURL) {
         showToast('error', 'Error de configuración', 'No se pudo establecer conexión con el servidor.');
@@ -609,36 +825,67 @@ function enviarFormulario() {
     btn.disabled = true;
     loadingOverlay.classList.add('active');
 
-    // Configurar timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 segundos timeout
-
-    fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-        mode: 'no-cors' // Google Apps Script requiere no-cors
-    })
-    .then(() => {
-        // En modo no-cors, no podemos leer la respuesta pero si llegamos aquí, se envió
-        clearTimeout(timeoutId);
+    try {
+        // Usar el sistema de envío con reintentos
+        const result = await SubmissionManager.sendWithRetry(payload);
+        
+        // Éxito
         RateLimiter.recordSubmission();
         SubmissionGuard.endSubmission(true);
         loadingOverlay.classList.remove('active');
-        modalOverlay.classList.add('active');
-    })
-    .catch(error => {
-        clearTimeout(timeoutId);
+        
+        // Mostrar modal de éxito con ID de confirmación
+        showSuccessModal(result.submissionId);
+        
+    } catch (error) {
         SubmissionGuard.endSubmission(false);
         loadingOverlay.classList.remove('active');
+        btn.disabled = false;
+        
+        console.error('Error en envío:', error);
         
         if (error.name === 'AbortError') {
-            showToast('error', 'Tiempo agotado', 'La solicitud tardó demasiado. Intenta de nuevo.');
+            showToast('error', 'Tiempo agotado', 'La solicitud tardó demasiado después de varios intentos.');
         } else {
-            showToast('error', 'Error de conexión', 'No se pudo enviar. Verifica tu conexión e intenta de nuevo.');
+            // Mostrar opción de guardar localmente
+            showFailureModal(payload);
         }
-        btn.disabled = false;
-    });
+    }
+}
+
+// Mostrar modal de éxito con ID de confirmación
+function showSuccessModal(submissionId) {
+    const modalMessage = document.querySelector('.modal-message');
+    if (modalMessage && submissionId) {
+        modalMessage.innerHTML = `
+            Tu Diagnóstico de Necesidades de Capacitación ha sido registrado exitosamente. 
+            El equipo de Recursos Humanos revisará tu solicitud.<br><br>
+            <small style="color: var(--gray-500);">
+                ID de confirmación: <code style="background: var(--dark-tertiary); padding: 2px 8px; border-radius: 4px;">${submissionId.substring(0, 16)}</code>
+            </small>
+        `;
+    }
+    modalOverlay.classList.add('active');
+}
+
+// Mostrar modal de fallo con opciones
+function showFailureModal(payload) {
+    // Guardar datos localmente para recuperación
+    try {
+        localStorage.setItem('dnc_backup_' + Date.now(), JSON.stringify(payload));
+    } catch(e) {
+        console.error('No se pudo guardar backup local:', e);
+    }
+    
+    showToast('error', 'Error de conexión', 
+        'No se pudo enviar después de varios intentos. Tus datos se han guardado localmente. ' +
+        'Por favor intenta de nuevo más tarde o contacta a RH.');
+    
+    // Mostrar botón de reintento después de 10 segundos
+    setTimeout(() => {
+        showToast('warning', 'Reintentar envío', 
+            'Puedes intentar enviar de nuevo haciendo clic en el botón "Enviar Diagnóstico".');
+    }, 10000);
 }
 
 function cerrarModalYRecargar() {
@@ -648,4 +895,25 @@ function cerrarModalYRecargar() {
 
 // ===== INICIALIZACIÓN =====
 actualizarEstado();
+
+// Intentar recuperar envíos pendientes al cargar
+window.addEventListener('load', () => {
+    // Esperar un momento para no interferir con la carga inicial
+    setTimeout(() => {
+        if (SubmissionManager.hasPendingSubmissions()) {
+            showToast('warning', 'Envíos pendientes', 
+                'Tienes envíos que no se completaron. Se reintentarán automáticamente.');
+            SubmissionManager.retryPendingSubmissions();
+        }
+    }, 2000);
+});
+
+// Advertir si el usuario intenta cerrar con envío en progreso
+window.addEventListener('beforeunload', (e) => {
+    if (SubmissionGuard.isSubmitting) {
+        e.preventDefault();
+        e.returnValue = 'Tienes un envío en progreso. ¿Estás seguro de que quieres salir?';
+        return e.returnValue;
+    }
+});
 

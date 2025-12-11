@@ -888,6 +888,14 @@ body::before {
     border-left-color: var(--warning);
 }
 
+.toast.info {
+    border-left-color: #3b82f6;
+}
+
+.toast.info .toast-icon {
+    color: #3b82f6;
+}
+
 .toast-icon {
     width: 26px;
     height: 26px;
@@ -973,6 +981,45 @@ body::before {
     color: var(--gray-400);
     font-weight: 500;
     letter-spacing: 0.5px;
+    transition: var(--transition-base);
+}
+
+.loading-subtext {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    margin-top: 8px;
+}
+
+.loading-progress {
+    width: 200px;
+    height: 4px;
+    background: var(--dark-tertiary);
+    border-radius: var(--radius-full);
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.loading-progress-bar {
+    height: 100%;
+    width: 30%;
+    background: linear-gradient(90deg, var(--aam-red), var(--aam-red-light));
+    border-radius: var(--radius-full);
+    animation: loadingProgress 2s ease-in-out infinite;
+}
+
+@keyframes loadingProgress {
+    0% {
+        width: 0%;
+        margin-left: 0%;
+    }
+    50% {
+        width: 60%;
+        margin-left: 20%;
+    }
+    100% {
+        width: 0%;
+        margin-left: 100%;
+    }
 }
 
 /* ===== Success Modal ===== */
@@ -1038,6 +1085,12 @@ body::before {
     color: var(--gray-400);
     margin-bottom: 36px;
     line-height: 1.7;
+}
+
+.modal-message code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85rem;
+    color: var(--gray-300);
 }
 
 .modal-btn {
